@@ -11,13 +11,20 @@ data <- subset(hpc,(Date=="1/2/2007")|(Date=="2/2/2007"))
 head(data);dim(data)
 rm(list=(ls()[ls()!="data"]))
 
+data$dateTime <- paste(data$Date,data$Time); head(data)
+data$weekday <- weekdays(strptime(data$dateTime,"%d/%m/%Y %H:%M:%S"))
+Thu <- sum(data$weekday=="Thursday"); Fri <- sum(data$weekday=="Friday")
+v1 <- c(0,Thu,Thu+Fri); v2 <- c("Thu","Fri","Sat")
+
 #global active power over time
 with(data,plot(as.numeric(Global_active_power),type="l",
-     ylab="Global Active Power (killowatts)",xlab=""))
+     ylab="Global Active Power (killowatts)",xlab="",xaxt="n"))
+axis(1, at=v1,labels=v2)
 
-png(filename="plot1.png")
-with(data,hist(as.numeric(Global_active_power),col="red",
-               xlab="Global Active Power (killowatts)",main="Global Active Power"))
+png(filename="plot2.png")
+with(data,plot(as.numeric(Global_active_power),type="l",
+               ylab="Global Active Power (killowatts)",xlab="",xaxt="n"))
+axis(1, at=v1,labels=v2)
 dev.off()
 
 
